@@ -5,7 +5,7 @@
     then partition the array in two parts
     one part less then pivot and other greater
     then recursively apply the same logic
-    until sorted
+    until sorted 
     then combine
 
     TC: O(nlogn) avg case
@@ -17,41 +17,68 @@
 #include<bits/stdc++.h>
 using namespace std;
 
-int partition(int arr[], int low, int high){
-    int pivot=arr[low];
-    int i=low+1;
-    int j=high;
+int Partition(int array[], int low, int high){
+
+  int pivot = array[low];
+  int i = low;
+  int j = high;
+
+  while(true){
+    while(array[i] <= pivot && i <= high){
+      i++;
+    }
+    while(array[j] > pivot && j >= low){
+      j--;
+    }
+    if(i >=j){
+      break;
+    }
+    swap(array[i],array[j]);
+  }
+  swap(array[low]/*which is pivot*/, array[j]);
+  return j; //index of pivot
+}
+
+// reversed -----------------------
+
+int RevPartition(int array[], int low, int high) {
+    int pivot = array[low];
+    int i = low;
+    int j = high;
 
     while (true) {
-        //boro paowa prjnto right e jabe i++ hobe
-        while(i <= high && arr[i]<=pivot){
+        // For descending order
+        while (array[i] >= pivot && i <= high) {
             i++;
         }
-        while(j >= low && arr[j] > pivot){
+        while (array[j] < pivot && j >= low) {
             j--;
         }
-
-        //i j cross krle loop vangbe
-        if (i >= j){
+        if (i >= j) {
             break;
         }
-        swap(arr[i],arr[j]);
+        swap(array[i], array[j]);
     }
-    //sob seshe j ar pivot swap
-    swap(arr[low],arr[j]);
-    return j; //pivot index
+    swap(array[low], array[j]);
+    return j; // index of pivot
+}
 
-} 
 
-void quickSort(int arr[], int low, int high){
+void qSort(int array[],int low, int high){
+  if(low  < high){
+    int j = Partition(array, low, high);
+    qSort(array, low,j);
+    qSort(array,j+1,high);
+  }
 
-    if(low<high){
-        int partIndex = partition(arr,low,high);
+}
+void RevqSort(int array[],int low, int high){
+  if(low  < high){
+    int j = RevPartition(array, low, high);
+    RevqSort(array, low,j);
+    RevqSort(array,j+1,high);
+  }
 
-        //recursive calling
-        quickSort(arr,low,partIndex-1);
-        quickSort(arr,partIndex+1,high);
-    }
 }
 
 int main(){
@@ -60,19 +87,24 @@ int main(){
   cin.tie(NULL);
   cout.tie(NULL);
 
-  int n;
+  int n;//size
   cin >> n;
-  vector<int> arr(n);
-  for(int i = 0; i < n; i++){
-      cin >> arr[i]; 
-    }
-
-  quickSort(arr.data(), 0, n - 1);
-
-  for(auto it:arr){
+  int array[n];
+  vector<int> vec;
+  while(n--){
+    int x;
+    cin >> x;
+    vec.push_back(x);
+  }
+  cout << "sorted array is: ";
+  qSort(vec.data(), 0, vec.size() - 1);
+  for(auto it: vec){
     cout << it << " ";
   }
-
   
-    return 0;
+  cout << "\nReversed sorted array is: ";
+  RevqSort(vec.data(), 0, vec.size() - 1);
+  for(auto it: vec){
+    cout << it << " ";
+  }
 }
